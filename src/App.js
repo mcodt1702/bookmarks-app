@@ -11,7 +11,6 @@ const bookmarks = [];
 
 class App extends Component {
   state = {
-    page: "list",
     bookmarks,
     error: null,
   };
@@ -65,36 +64,37 @@ class App extends Component {
   }
 
   render() {
-    const { page, bookmarks } = this.state;
     return (
       <main className="App">
         <h1>Bookmarks!</h1>
 
-        <Route>
-          {" "}
-          <Nav clickPage={this.changePage} />
-          <div className="content" aria-live="polite">
-            {page === "add" && (
-              <AddBookmark
-                onAddBookmark={this.addBookmark}
-                onClickCancel={() => this.changePage("list")}
-              />
-            )}
-            {page === "list" && (
-              <BookmarkList
-                bookmarks={bookmarks}
-                editBookmark={this.editBookmark}
-                editPage={this.changePage}
-              />
-            )}
-            {page === "edit" && (
-              <EditBookmark
-                editBookmark={this.editBookmark}
-                editPage={this.changePage}
-              />
-            )}
-          </div>
-        </Route>
+        <Route
+          path="/"
+          render={(rprops) => <Nav clickPage={this.changePage} />}
+        />
+
+        <Route
+          path="/add"
+          render={(rprops) => (
+            <AddBookmark
+              onAddBookmark={this.addBookmark}
+              onClickCancel={() => this.changePage("list")}
+            />
+          )}
+        />
+        <Route
+          path="/"
+          render={(rprops) => <BookmarkList bookmarks={bookmarks} />}
+        />
+        <Route
+          path="/edit/id"
+          render={(rprops) => (
+            <EditBookmark
+              editBookmark={this.editBookmark}
+              editPage={this.changePage}
+            />
+          )}
+        />
       </main>
     );
   }
