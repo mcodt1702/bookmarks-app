@@ -1,29 +1,19 @@
-import React, { Component } from "react";
+import React from "react";
 import BookmarkItem from "../BookmarkItem/BookmarkItem";
 import "./BookmarkList.css";
 
-class BookmarkList extends Component {
-  static defaultProps = {
-    bookmarks: [],
-  };
+export default function BookmarkList(bookmarks) {
+  console.log(bookmarks);
+  const flash = bookmarks.map((bookmark) => (
+    <BookmarkItem key={bookmark.id} {...bookmark} />
+  ));
 
-  render() {
-    const { bookmarks } = this.props;
-    return (
-      <section className="BookmarkList">
-        <h2>Your bookmarks</h2>
-        <ul className="BookmarkList__list" aria-live="polite">
-          {bookmarks.map((bookmark) => (
-            <BookmarkItem
-              key={bookmark.id}
-              editbookmark={this.editbookmark}
-              {...bookmark}
-            />
-          ))}
-        </ul>
-      </section>
-    );
-  }
+  return (
+    <section className="BookmarkList">
+      <h2>Your bookmarks</h2>
+      <ul className="BookmarkList__list" aria-live="polite">
+        {flash}
+      </ul>
+    </section>
+  );
 }
-
-export default BookmarkList;

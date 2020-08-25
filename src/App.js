@@ -7,24 +7,10 @@ import "./App.css";
 import { Route } from "react-router-dom";
 import EditBookmark from "./EditBookmark/EditBookmark";
 
-const bookmarks = [];
-
 class App extends Component {
   state = {
-    bookmarks,
+    bookmarks: [],
     error: null,
-  };
-
-  changePage = (page) => {
-    this.setState({ page });
-  };
-
-  setBookmarks = (bookmarks) => {
-    this.setState({
-      bookmarks,
-      error: null,
-      page: "list",
-    });
   };
 
   addBookmark = (bookmark) => {
@@ -47,20 +33,9 @@ class App extends Component {
     });
   };
   componentDidMount() {
-    fetch(config.API_ENDPOINT, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res.status);
-        }
-        return res.json();
-      })
-      .then(this.setBookmarks)
-      .catch((error) => this.setState({ error }));
+    fetch("http://localhost:8000/api/bookmarks/")
+      .then((res) => res.json())
+      .then((bookmarks) => this.setState({ bookmarks }));
   }
 
   render() {
@@ -68,10 +43,7 @@ class App extends Component {
       <main className="App">
         <h1>Bookmarks!</h1>
 
-        <Route
-          path="/"
-          render={(rprops) => <Nav clickPage={this.changePage} />}
-        />
+        <Route path="/" render={(rprops) => <Nav />} />
 
         <Route
           path="/add"
@@ -83,8 +55,8 @@ class App extends Component {
           )}
         />
         <Route
-          path="/"
-          render={(rprops) => <BookmarkList bookmarks={bookmarks} />}
+          path="/list"
+          render={(rprops) => <BookmarkList bookmarks={this.state.bookmarks} />}
         />
         <Route
           path="/edit/id"
