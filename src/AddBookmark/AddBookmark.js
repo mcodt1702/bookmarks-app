@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import config from "../config";
 import "./AddBookmark.css";
-
+import Context from "../context"
 const Required = () => <span className="AddBookmark__required">*</span>;
 
 class AddBookmark extends Component {
+  static contextType = Context;
   static defaultProps = {
     onAddBookmark: () => {},
   };
@@ -23,7 +24,7 @@ class AddBookmark extends Component {
       description: description.value,
       rating: rating.value,
     };
-    this.setState({ error: null });
+
     fetch(config.API_ENDPOINT, {
       method: "POST",
       body: JSON.stringify(bookmark),
@@ -60,7 +61,12 @@ class AddBookmark extends Component {
     return (
       <section className="AddBookmark">
         <h2>Create a bookmark</h2>
-        <form className="AddBookmark__form" onSubmit={this.handleSubmit}>
+        <form
+          className="AddBookmark__form"
+          onSubmit={(e) => {
+            this.context.addBookmark(e);
+          }}
+        >
           <div className="AddBookmark__error" role="alert">
             {error && <p>{error.message}</p>}
           </div>
