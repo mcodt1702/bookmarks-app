@@ -1,50 +1,22 @@
+import Context from '../context'
 import React, { Component } from "react";
-import config from "../config";
 const Required = () => <span className="AddBookmark__required">*</span>;
 
-export default class EditBookmark extends Component {
-  state = {
-    error: null,
-  };
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    // get the form fields from the event
-    const { title, url, description, rating } = e.target;
-    const bookmark = {
-      title: title.value,
-      url: url.value,
-      description: description.value,
-      rating: rating.value,
-    };
-    const bookmarkid = this.props.params.id;
-    this.setState({ error: null });
-    fetch(`config.API_ENDPOINT /${bookmarkid}`, {
-      method: "POST",
-      body: JSON.stringify(bookmark),
-      headers: {
-        "content-type": "application/json",
-        authorization: `bearer ${config.API_KEY}`,
-      },
-    })
-      .then((data) => {
-        title.value = "";
-        url.value = "";
-        description.value = "";
-        rating.value = "";
-        this.props.editBookmark(data);
-      })
-      .catch((error) => {
-        this.setState({ error });
-      });
-  };
+export default class EditBookmark extends Component {
+ 
+ 
+ static contextType = Context
+
+   
+  
 
   render() {
     const { onClickCancel } = this.props;
     return (
       <section className="AddBookmark">
         <h2>Edit a bookmark {this.props.match.params.id}</h2>
-        <form className="AddBookmark__form" onSubmit={this.handleSubmit}>
+        <form className="AddBookmark__form" onSubmit={e => {this.context.editBookmark(e,this.props.match.params.id)}}>
           <div className="AddBookmark__error" role="alert" />
           <div>
             <label htmlFor="title">Title</label>

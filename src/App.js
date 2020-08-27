@@ -10,7 +10,7 @@ import Context from "./context"
 
 class App extends Component {
   state = {
-    bookmarks: ["hello im passing"],
+    bookmarks: [],
     error: null,
 
     addBookmark: (e) => {
@@ -48,25 +48,36 @@ class App extends Component {
         });
     },
 
-    editBookmark: (bookmark) => {
-      fetch(config.APO_ENDPOING_EDIT, {
+    editBookmark: (e, id) => {
+      e.preventDefault();
+    console.log(id)
+      const { title, url, description, rating } = e.target;
+      const editedbookmark = {
+        title: title.value,
+        url: url.value,
+        description: description.value,
+        rating: rating.value,
+      };
+      fetch(`http://localhost:8000/api/bookmarks/${id}`, {
         method: "PATCH",
         headers: {
           "content-type": "application/json",
-          body: JSON.stringify(bookmark),
-        },
-      });
-    },
-
-
-    componentDidMount() {
+          body: JSON.stringify(editedbookmark),
+        }
+      })
       fetch(config.API_ENDPOINT)
-        .then((res) => res.json())
-        .then((bookmarks) => this.setState({ bookmarks }));
+      .then((res) => res.json())
+      .then((bookmarks) => this.setState({ bookmarks }));
   
-    }
+    
+  }}
 
-  };
+  componentDidMount() {
+    fetch(config.API_ENDPOINT)
+      .then((res) => res.json())
+      .then((bookmarks) => this.setState({ bookmarks }));
+
+  }
   
 
   render() {
